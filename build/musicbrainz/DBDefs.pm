@@ -51,7 +51,7 @@ sub MB_SERVER_ROOT    { "/musicbrainz-server" }
 MusicBrainz::Server::DatabaseConnectionFactory->register_databases(
     # How to connect when we need read-write access to the database
     READWRITE => {
-        database    => "musicbrainz_db",
+        database    => "$ENV{POSTGRES_DB}",
         username    => "$ENV{POSTGRES_USER}",
         password    => "$ENV{POSTGRES_PASSWORD}",
         host        => "db",
@@ -77,7 +77,7 @@ MusicBrainz::Server::DatabaseConnectionFactory->register_databases(
     },
     # How to connect for read-only access.  See "REPLICATION_TYPE" (below)
     READONLY => {
-        database    => "musicbrainz_db",
+        database    => "$ENV{POSTGRES_DB}",
         username    => "$ENV{POSTGRES_USER}",
         password    => "$ENV{POSTGRES_PASSWORD}",
         host        => "db",
@@ -95,7 +95,7 @@ MusicBrainz::Server::DatabaseConnectionFactory->register_databases(
     # This defaults to READWRITE if left undefined, but should be configured if
     # READWRITE points to a connection pooler that doesn't support session-based features.
 #   MAINTENANCE    => {
-#       database    => "musicbrainz_db",
+#       database    => "$ENV{POSTGRES_DB}",
 #       username    => "musicbrainz",
 #       password        => "musicbrainz",
 #       host            => "",

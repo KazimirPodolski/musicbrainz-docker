@@ -1,0 +1,50 @@
+version: '3.9'
+
+# Description: Database-only mirror with database actually defined in user's compose file. Example usage: in the
+# directory with parent compose file, assuming it has musicbrainz-docker/ repo there, do
+# docker-compose -f <db docker compose>.yml -f musicbrainz-docker/docker-compose.alt.db-external.yml --env-file=.env --project-directory=./musicbrainz-docker run --rm musicbrainz createdb.sh -fetch
+
+volumes:
+  dbdump:
+    driver: local
+
+networks:
+  default:
+    external: true
+    name: ${MUSICBRAINZ_NETWORK_NAME}
+
+services:
+  musicbrainz:
+    build:
+      context: build/musicbrainz
+      args:
+        - POSTGRES_VERSION=${MUSICBRAINZ_POSTGRES_VERSION:-12}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "50"
+    volumes:
+      - dbdump:/media/dbdump
+    restart: unless-stopped
+    environment:
+      - MUSICBRAINZ_BASE_FTP_URL=${MUSICBRAINZ_BASE_FTP_URL:-ftp://ftp.eu.metabrainz.org/pub/musicbrainz}
+      - MUSICBRAINZ_WEB_SERVER_HOST=${MUSICBRAINZ_WEB_SERVER_HOST:-localhost}
+      - MUSICBRAINZ_WEB_SERVER_PORT=${MUSICBRAINZ_WEB_SERVER_PORT:-5000}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_USER}
+    command: load-crontab-only.sh
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:3-alpine
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    restart: unless-stopped
+    expose:
+      - "6379"
