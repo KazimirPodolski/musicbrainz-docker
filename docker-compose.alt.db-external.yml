@@ -4,10 +4,6 @@ version: '3.9'
 # directory with parent compose file, assuming it has musicbrainz-docker/ repo there, do
 # docker-compose -f <db docker compose>.yml -f musicbrainz-docker/docker-compose.alt.db-external.yml --env-file=.env --project-directory=./musicbrainz-docker run --rm musicbrainz createdb.sh -fetch
 
-volumes:
-  dbdump:
-    driver: local
-
 networks:
   default:
     external: true
