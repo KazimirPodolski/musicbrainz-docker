@@ -28,7 +28,8 @@ services:
       - dbdump:/media/dbdump
     restart: unless-stopped
     environment:
-      - MUSICBRAINZ_BASE_FTP_URL=${MUSICBRAINZ_BASE_FTP_URL:-ftp://ftp.eu.metabrainz.org/pub/musicbrainz}
+      - MUSICBRAINZ_BASE_FTP_URL=${MUSICBRAINZ_BASE_FTP_URL:-}
+      - MUSICBRAINZ_BASE_DOWNLOAD_URL=${MUSICBRAINZ_BASE_DOWNLOAD_URL:-http://ftp.eu.metabrainz.org/pub/musicbrainz}
       - MUSICBRAINZ_WEB_SERVER_HOST=${MUSICBRAINZ_WEB_SERVER_HOST:-localhost}
       - MUSICBRAINZ_WEB_SERVER_PORT=${MUSICBRAINZ_WEB_SERVER_PORT:-5000}
       - POSTGRES_USER=${POSTGRES_USER}
