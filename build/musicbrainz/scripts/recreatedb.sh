@@ -3,4 +3,4 @@
 set -e
 
 dockerize -wait tcp://db:5432 -timeout 60s sleep 0
-psql postgres -U musicbrainz -h db -c "DROP DATABASE ${POSTGRES_DB};"; createdb.sh "$@"
+psql postgres -U musicbrainz -h db -c "DROP DATABASE IF EXISTS ${POSTGRES_DB};"; createdb.sh "$@"
